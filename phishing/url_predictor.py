@@ -81,7 +81,7 @@ def predictor(model, url: str):
 
      # 1. Check if domain is whitelisted
     if base_domain in WHITELIST_DOMAINS:
-        st.success(f"✅ Whitelisted domain: {base_domain}. Safe.")
+        st.success(f"✅ Whitelisted domain: {base_domain} : Safe.")
         y_pred = 0
         y_proba = [[1, 0]]
         return y_pred, y_proba

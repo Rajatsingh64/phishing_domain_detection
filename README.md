@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="templates/assets/image1.png" alt="Phishing Domain Detection" width="1000" heigt="300"/>
+  <img src="templates/assets/image1.png" alt="Phishing Domain Detection" width="1000" heigt="400"/>
 </p
 
 ## **APP Overview:**
 
 <p align="center">
-  <img src="templates/assets/gif_demo1.gif" alt="Phishing Domain Detection" width="1000" heigt="500"/>
+  <img src="templates/assets/gif_demo1.gif" alt="Phishing Domain Detection" width="1200" heigt="800"/>
 </p
 
 

@@ -1,0 +1,247 @@
+/* === General Reset and Layout === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-color: #f4f6f9;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 40px;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* === Main container === */
+.container {
+    max-width: 1200px;
+    width: 100%;
+    padding: 20px;
+    background-color: #eaf4fb; /* Soft white-ish blue background */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+/* === Sidebar Customization === */
+section[data-testid="stSidebar"] {
+    background-color: #eaf4fb !important; /* Match main container */
+    border-right: 1px solid #d1e3f0;
+}
+
+.css-1v0mbdj.e115fcil1 {  /* Sidebar header title override (optional, may vary) */
+    color: #333;
+}
+
+/* === Glowing Sidebar Button === */
+.stButton > button {
+    background-color: #1abc9c;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    animation: glowButton 2s infinite alternate;
+    transition: transform 0.3s ease;
+    width: 100%;
+}
+
+.stButton > button:hover {
+    transform: scale(1.03);
+    background-color: #16a085;
+}
+
+@keyframes glowButton {
+    0% {
+        box-shadow: 0 0 5px rgba(26, 188, 156, 0.4);
+    }
+    100% {
+        box-shadow: 0 0 15px rgba(26, 188, 156, 0.8);
+    }
+}
+
+/* === Header with social buttons === */
+.header {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.social-btn {
+    text-decoration: none;
+    font-size: 15px;
+    color: black;
+    background-color: rgb(122, 204, 227) ;
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.social-btn:hover {
+    background-color: #16a085;
+}
+
+/* === Main Title === */
+.main-title {
+    font-size: 36px;
+    font-weight: bold;
+    color: #333;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* === Subheader === */
+.subheader {
+    font-size: 20px;
+    font-weight: 500;
+    color: #333;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* === Button Styling (Main Predict Button) === */
+.predict-btn {
+    background-color: #1abc9c;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+    transition: transform 0.2s, background-color 0.3s;
+    margin-top: 10px;
+}
+
+.predict-btn:hover {
+    background-color: #16a085;
+    transform: scale(1.03);
+}
+
+/* === Glow Animation for Textarea === */
+textarea {
+    border: 2px solid #1abc9c;
+    border-radius: 8px;
+    padding: 12px;
+    width: 100%;
+    resize: vertical;
+    font-size: 14px;
+    font-family: 'Segoe UI', sans-serif;
+    box-shadow: 0 0 5px rgba(26, 188, 156, 0.4);
+    transition: box-shadow 0.3s ease-in-out;
+    animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+    0% {
+        box-shadow: 0 0 5px rgba(26, 188, 156, 0.2);
+    }
+    100% {
+        box-shadow: 0 0 15px rgba(26, 188, 156, 0.6);
+    }
+}
+
+/* === Glowing effect for Best Prediction === */
+.best-result {
+    font-size: 20px;
+    font-weight: bold;
+    color: #2e7d32;
+    background-color: #e8f5e9;
+    padding: 15px;
+    border-radius: 6px;
+    border-left: 6px solid #388e3c;
+    box-shadow: 0 0 10px rgba(46, 125, 50, 0.7);
+    animation: glowBest 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes glowBest {
+    0% {
+        box-shadow: 0 0 10px rgba(46, 125, 50, 0.5);
+    }
+    100% {
+        box-shadow: 0 0 20px rgba(46, 125, 50, 1);
+    }
+}
+
+/* === Loading Spinner === */
+.loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #1abc9c;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* === Result Styling === */
+.result.safe {
+    background-color: #e8f5e9;
+    border-left: 6px solid #2e7d32;
+    padding: 15px;
+    margin-top: 20px;
+    font-size: 18px;
+    border-radius: 6px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.result.danger {
+    background-color: #ffebee;
+    border-left: 6px solid #c62828;
+    padding: 15px;
+    margin-top: 20px;
+    font-size: 18px;
+    border-radius: 6px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.result.suspicious {
+    background-color: #ffebee;
+    border-left: 6px solid #ec6b09;
+    padding: 15px;
+    margin-top: 20px;
+    font-size: 18px;
+    border-radius: 6px;
+    transition: transform 0.4s ease-in-out;
+}
+.result.safe:hover, .result.danger:hover {
+    transform: scale(1.02);
+}
+
+/* Footer Styling */
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #ffffff;  /* White background */
+    color: #1abc9c;  /* Blue text color */
+    padding: 10px 0;
+    margin-right: 30px;
+    font-size: 18px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for better separation */
+}
+
+footer a {
+    color: #1abc9c;  /* Blue link color */
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;  /* Underline effect when hovering over the link */
+}

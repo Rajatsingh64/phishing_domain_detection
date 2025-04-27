@@ -23,4 +23,5 @@ tld==0.12.6
 ipwhois==1.3.0
 aslookup==1.3.0
 dnspython==2.6.1
-uvcorn
+db-dtypes
+-e .

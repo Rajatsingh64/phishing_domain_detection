@@ -1,17 +1,31 @@
+![Project Status](https://img.shields.io/badge/Project%20Status-Completed-green?style=for-the-badge&logo=github)
+
 <p align="center">
-  <img src="templates/assets/image1.png" alt="Phishing Domain Detection" width="1000" heigt="400"/>
-</p
+  <img src="templates/assets/image1.png" alt="Phishing Domain Detection" width="1000" height="400"/>
+</p>
+
+
+## 📌 Project Overview
+Detecting phishing domains using machine learning techniques to enhance cybersecurity by identifying malicious websites.
 
 ## **APP Overview:**
 
 <p align="center">
-  <img src="templates/assets/gif_demo1.gif" alt="Phishing Domain Detection" width="1200" heigt="800"/>
-</p
+  <img src="templates/assets/gif_demo1.gif" alt="Phishing Domain Detection Demo" width="1200" height="800"/>
+</p>
 
+## 💻 Features
 
-![Ongoing](https://img.shields.io/badge/Project%20Status-Completed-green?style=for-the-badge&logo=github)
+- **Machine Learning Model:** Detect phishing domains using machine learning.
+- **Real-time Detection:** Fast, real-time detection of malicious websites.
+- **Interactive UI:** User-friendly and interactive web interface to input domain URLs.
 
-# 🚀 Phishing Domain Detection
+## 🚀 Getting Started
 
-## 📌 Project Overview
-Detecting phishing domains using machine learning techniques to enhance cybersecurity by identifying malicious websites.
+To get started with this project:
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/your-username/phishing-domain-detection.git
+cd phishing-domain-detection

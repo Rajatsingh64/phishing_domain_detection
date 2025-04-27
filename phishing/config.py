@@ -1,35 +1,54 @@
+"""
+This script handles the loading of environment variables,
+decoding Base64-encoded Google Cloud service account credentials,
+and establishes a BigQuery client connection using explicit credentials.
+
+"""
+
 from dotenv import load_dotenv
 from dataclasses import dataclass
 from google.cloud import bigquery
 from google.oauth2 import service_account
 import pickle
-import os,sys
-import json 
+import os
+import sys
+import base64
+import json
 
-print(f'\nloading .env file ......')
-load_dotenv()  #loading sensitive information from .env
+# Load environment variables from the .env file
+print('\nLoading .env file...')
+load_dotenv()
 
-#Creating class for environments Variables, in future i can hide my sensitive information like (eg.passwords ,url)
 @dataclass
 class EnvironmentVariables:
-    google_clouds_credentials = os.getenv("GOOGLE_CREDENTIALS_PATH") 
-    table_id:str=os.getenv("Table_ID")
+    """
+    Class to manage and access environment variables.
+    This structure allows easy retrieval and future enhancement
+    for sensitive information like passwords and URLs.
+    """
+    google_clouds_credentials_json: str = os.getenv("GOOGLE_CREDENTIALS_B64")
+    table_id: str = os.getenv("Table_ID")
+  
 
+# Initialize environment variables
+env = EnvironmentVariables()
 
-env=EnvironmentVariables()
+# Decode the Base64-encoded credentials string
+credentials_str = base64.b64decode(env.google_clouds_credentials_json).decode('utf-8')
 
-credentials_path=env.google_clouds_credentials
-# Create a Credentials object from the service account file
-credentials = service_account.Credentials.from_service_account_file(credentials_path)
-# Extract the project_id from the credentials (or set it manually)
-project_id = credentials.project_id
-table_id=env.table_id
+# Load the decoded string into a dictionary
+credentials_info = json.loads(credentials_str)
 
-# Initialize the BigQuery client with the credentials and project ID
+# Create service account credentials from the dictionary
+credentials = service_account.Credentials.from_service_account_info(credentials_info)
+
+project_id=credentials.project_id
+# Extract table_id for usage
+table_id = env.table_id
+
+# Initialize the BigQuery client using the provided credentials and project ID
 google_client = bigquery.Client(credentials=credentials, project=project_id)
-print("Connected to BigQuery using explicit credentials file.")
 
-# open("important_features_names.pkl" , "rb") as file:
-    #important_features=pickle.load(file)
+print(" Successfully connected to BigQuery using explicit credentials. ")
 
-
+TARGET_COLUMN="phishing"

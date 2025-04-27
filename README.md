@@ -8,10 +8,10 @@
 ## 📌 Project Overview
 Detecting phishing domains using machine learning techniques to enhance cybersecurity by identifying malicious websites.
 
-## **APP Overview:**
+### **Streamlit App Overview:**
 
 <p align="center">
-  <img src="templates/assets/gif_demo1.gif" alt="Phishing Domain Detection Demo" width="1200" height="800"/>
+  <img src="templates/assets/gif_demo1.gif" alt="Phishing Domain Detection Demo" width="1000" height="500"/>
 </p>
 
 ## 💻 Features

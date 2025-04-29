@@ -11,7 +11,7 @@ Detecting phishing domains using machine learning techniques to enhance cybersec
 ### **Streamlit App Overview:**
 
 <p align="center">
-  <img src="templates/assets/gif_demo1.gif" alt="Phishing Domain Detection Demo" width="1000" height="500"/>
+  <img src="templates/assets/gif_demo1.gif" alt="Phishing Domain Detection Demo" width="1000" height="300"/>
 </p>
 
 ## 💻 Features
@@ -60,6 +60,7 @@ cd phishing-domain-detection
 - Installed all necessary libraries specified in `requirements.txt`.
 
 ### 2. **Project Folder Structure**
+```
 Phishing-Domain-Detection/               # Root directory of the project
 │
 ├── airflow/                            # Airflow setup and configurations

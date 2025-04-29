@@ -14,8 +14,6 @@ WORKDIR /app
 # Copy everything into /app
 COPY . /app/
 
-COPY dags/ /app/airflow/dags/
-
 # Install system dependencies & PostgreSQL driver, AWS CLI, Supervisor
 RUN apt update -y && \
     apt install -y gcc libpq-dev awscli supervisor && \

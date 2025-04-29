@@ -4,23 +4,33 @@
   <img src="demo/assets/image1.png" alt="Phishing Domain Detection" width="1000" height="400"/>
 </p>
 
+## 📂 Project Navigation  
+
+📁 [**Notebooks**](notebook/) | 📁 [**Pipelines**](phishing/pipeline/) | 📁 [**Airflow DAGs**](airflow/dags/) | 📁 [**Docs**](docs/) | 📁 [**Components**](phishing/components)
 
 ## 📌 Project Overview
 Detecting phishing domains using machine learning techniques to enhance cybersecurity by identifying malicious websites.
 
+---
 ### **Streamlit App Overview:**
 
 <p align="center">
   <img src="demo/assets/gif_demo1.gif" alt="Phishing Domain Detection Demo" width="1000" height="400"/>
 </p>
 
+---
 ### **Model Training(CT) Overview:**
 
 <p align="center">
   <img src="demo/assets/gif_demo2.gif" alt="Phishing Domain Detection Demo" width="1000" height="400"/>
 </p>
 
-### **Artifacts/Latest Models Overview:**
+---
+### ☁️ **S3 Bucket Outputs**  
+The S3 bucket stores all generated outputs, including:  
+- ✅ **Saved Models**  
+- 📂 **Clustered Files**  
+- 🔍 **Artifacts*
 
 <p align="center">
   <img src="demo/assets/gif_demo3.gif" alt="Phishing Domain Detection Demo" width="1000" height="400"/>
@@ -31,6 +41,7 @@ Detecting phishing domains using machine learning techniques to enhance cybersec
 - **Machine Learning Model:** Detect phishing domains using machine learning.
 - **Real-time Detection:** Fast, real-time detection of malicious websites.
 - **Interactive UI:** User-friendly and interactive web interface to input domain URLs.
+---
 
 ## 🚀 Getting Started
 

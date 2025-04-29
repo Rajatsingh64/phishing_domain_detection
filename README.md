@@ -112,6 +112,7 @@ Phishing-Domain-Detection/               # Root directory of the project
 ├── requirements.txt                    # Dependencies for the project
 └── notebook/                           # Jupyter notebooks for initial analysis
     └── research.ipynb                  # Exploratory data analysis and experiments
+```
 ---
 
 ## Deployment Guide
@@ -122,6 +123,7 @@ This guide provides step-by-step commands to deploy a Streamlit app on an EC2 in
 
 #### Commands for EC2 Setup and Deployment
 
+```
 1. **Launch an EC2 Instance** using the AWS Management Console with your preferred settings.
 
 2. **Connect to Your EC2 Instance**:

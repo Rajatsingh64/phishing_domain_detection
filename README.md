@@ -29,7 +29,7 @@ To get started with this project:
 ```bash
 git clone https://github.com/your-username/phishing-domain-detection.git
 cd phishing-domain-detection
-
+```
 ### **Key Features**
 - **Training and Prediction**: Seamless switching between training and prediction workflows.
 - **User-Friendly Interface**: Intuitive and easy-to-use design with a sidebar for navigation.

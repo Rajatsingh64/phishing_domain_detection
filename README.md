@@ -126,6 +126,8 @@ Phishing-Domain-Detection/               # Root directory of the project
 │   │
 │   └── exceptions.py                   # Custom exception handling
 │
+|── docs/                               # Documents(eg.HLD ,LLD ,DPR,etc.)
+
 |── demo/                               # demo vedio
 |   └── assets/                         # Images, GIFs, etc.
 |

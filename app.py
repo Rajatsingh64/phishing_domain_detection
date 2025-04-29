@@ -15,7 +15,7 @@ with open("templates/index.html", encoding="utf-8") as f:
 
 resolver=ModelResolver()
 model_path=resolver.get_latest_model_path()
-model_feature_names_file_path=resolver.get_latest_top_features_file_path()
+model_feature_names_file_path=resolver.get_latest_model_feature_names_file_path()
 
 # === Load model ===
 @st.cache_resource

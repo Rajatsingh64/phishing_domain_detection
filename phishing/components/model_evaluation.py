@@ -87,7 +87,7 @@ class ModelEvaluation:
             logging.info(f"Current model accuracy: {curr_model_score}")
 
             # Step 7: Compare model scores
-            if curr_model_score < prev_model_score:
+            if curr_model_score <= prev_model_score:
                 logging.info("Current model is worse than previous model.")
                 raise Exception("Current trained model is not better than the previous model.")
 

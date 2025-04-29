@@ -1,7 +1,7 @@
 ![Project Status](https://img.shields.io/badge/Project%20Status-Completed-green?style=for-the-badge&logo=github) 
 
 <p align="center">
-  <img src="templates/assets/image1.png" alt="Phishing Domain Detection" width="1000" height="400"/>
+  <img src="demo/assets/image1.png" alt="Phishing Domain Detection" width="1000" height="400"/>
 </p>
 
 
@@ -11,7 +11,19 @@ Detecting phishing domains using machine learning techniques to enhance cybersec
 ### **Streamlit App Overview:**
 
 <p align="center">
-  <img src="templates/assets/gif_demo1.gif" alt="Phishing Domain Detection Demo" width="1000" height="300"/>
+  <img src="demo/assets/gif_demo1.gif" alt="Phishing Domain Detection Demo" width="1000" height="400"/>
+</p>
+
+### **Model Training(CT) Overview:**
+
+<p align="center">
+  <img src="demo/assets/gif_demo2.gif" alt="Phishing Domain Detection Demo" width="1000" height="400"/>
+</p>
+
+### **Artifacts/Latest Models Overview:**
+
+<p align="center">
+  <img src="demo/assets/gif_demo3.gif" alt="Phishing Domain Detection Demo" width="1000" height="400"/>
 </p>
 
 ## 💻 Features
@@ -80,7 +92,7 @@ Phishing-Domain-Detection/               # Root directory of the project
 ├── templates/                          # Web application styling and documentation
 │   ├── style.css                       # Custom CSS for the web app
 │   ├── index.html                      # Web app documentation
-│   └── assets/                         # Images, GIFs, etc.
+│                            
 │
 ├── phishing/                           # Core source code for the phishing domain detection system
 │   ├── components/                     # Core pipeline components for data processing, training, etc.
@@ -102,8 +114,11 @@ Phishing-Domain-Detection/               # Root directory of the project
 │   │   └── training_pipeline.py        # Automates the model training process
 │   │
 │   └── exceptions.py                   # Custom exception handling
-│── demo/                               # demo vedio
-├── app.py                              # Streamlit app for domain/url phishing prediction
+│
+|── demo/                               # demo vedio
+|   └── assets/                         # Images, GIFs, etc.
+|
+|── app.py                              # Streamlit app for domain/url phishing prediction
 ├── main.py                             # Entry point for training and predictions
 ├── data_dump.py                        # Dumps data into MongoDB Atlas
 ├── setup.py                            # Package setup for the `phishing` module
@@ -123,7 +138,6 @@ This guide provides step-by-step commands to deploy a Streamlit app on an EC2 in
 
 #### Commands for EC2 Setup and Deployment
 
-```
 1. **Launch an EC2 Instance** using the AWS Management Console with your preferred settings.
 
 2. **Connect to Your EC2 Instance**:

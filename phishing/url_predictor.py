@@ -1,13 +1,13 @@
-from phishing.url_extractor import URLFeatureExtractor
+from phishing.url_extractor import extract_url_features
 from urllib.parse import urlparse, parse_qs
 import idna
 import streamlit as st
 from difflib import SequenceMatcher
 
-def predictor(model, url: str):
+
+def predictor(model, url: str , model_feature_names_file_path:str):
     # Initialize the URLFeatureExtractor to parse the features from the URL
-    parser = URLFeatureExtractor(url)
-    df = parser.get_features_as_dataframe()
+    df = extract_url_features(url=url , model_feature_names_path=model_feature_names_file_path)
 
     # Define known whitelisted and blacklisted domains
     WHITELIST_DOMAINS = {

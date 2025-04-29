@@ -1,4 +1,4 @@
-#from phishing.config import google_client, table_id
+from phishing.config import google_client, table_id
 from phishing.utils import get_table_as_dataframe
 from phishing.logger import logging
 from phishing.exception import PhishingException
@@ -48,11 +48,10 @@ class DataIngestion:
         """
         try:
             logging.info(f"Extracting Data from Google BigQuery")
-            # If you want to load from BigQuery, uncomment below line
-            #df = get_table_as_dataframe(client=google_client, table_id=table_id)
-            # For now, loading from a local CSV file for demo purposes
-            df = pd.read_csv("dataset/dataset_full.csv")
-
+            
+            # extracting dataset from GCP Bigquery Database as  pandas.DataFrame
+            df = get_table_as_dataframe(client=google_client, table_id=table_id)
+            
             # Clean the dataset
             logging.info(f"Dropping Null values from the dataset if available")
             df = df.dropna()

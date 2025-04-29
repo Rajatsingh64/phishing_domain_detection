@@ -11,24 +11,16 @@ from dns import resolver
 from datetime import datetime
 from aslookup import get_as_data
 from functools import lru_cache
-from  bs4 import BeautifulSoup
+from bs4 import BeautifulSoup
 import ssl
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from urllib.parse import urlparse
+import pickle
 from ipwhois import IPWhois
 import warnings
 warnings.filterwarnings("ignore")
 
 def get_asn_for_url(url):
-    """
-    Resolve the domain to an IP address and get the ASN (Autonomous System Number).
-
-    Args:
-        url (str): Domain or hostname.
-
-    Returns:
-        str: ASN if successful, else None.
-    """
     try:
         ip_address = socket.gethostbyname(url)
         obj = IPWhois(ip_address)
@@ -40,15 +32,6 @@ def get_asn_for_url(url):
 
 
 def time_response(url):
-    """
-    Measure the response time for a given URL in seconds.
-
-    Args:
-        url (str): Full URL to test.
-
-    Returns:
-        float: Response time in seconds, else -1 on failure.
-    """
     try:
         response = requests.get(url)
         return response.elapsed.total_seconds()
@@ -58,15 +41,6 @@ def time_response(url):
 
 
 def domain_spf(domain):
-    """
-    Check if the domain has SPF (Sender Policy Framework) DNS record.
-
-    Args:
-        domain (str): Domain name.
-
-    Returns:
-        int: 1 if SPF found, 0 if not found, -1 on error.
-    """
     try:
         spf_records = dns.resolver.resolve(domain, "TXT")
         for record in spf_records:
@@ -81,15 +55,6 @@ def domain_spf(domain):
 
 
 def qty_ip_resolved(domain):
-    """
-    Count the number of IP addresses resolved for a domain.
-
-    Args:
-        domain (str): Domain name.
-
-    Returns:
-        int: Number of resolved IPs, or -1 on failure.
-    """
     try:
         ips = socket.gethostbyname_ex(domain)
         return len(ips[2])
@@ -99,15 +64,6 @@ def qty_ip_resolved(domain):
 
 
 def qty_nameservers(domain):
-    """
-    Count the number of NS (Name Server) records for a domain.
-
-    Args:
-        domain (str): Domain name.
-
-    Returns:
-        int: Count of NS records or -1 on failure.
-    """
     try:
         ns_records = dns.resolver.resolve(domain, "NS")
         return len(ns_records)
@@ -117,15 +73,6 @@ def qty_nameservers(domain):
 
 
 def qty_mx_servers(domain):
-    """
-    Count the number of MX (Mail Exchange) servers for a domain.
-
-    Args:
-        domain (str): Domain name.
-
-    Returns:
-        int: Count of MX servers or -1 on failure.
-    """
     try:
         mx_records = dns.resolver.resolve(domain, "MX")
         return len(mx_records)
@@ -135,15 +82,6 @@ def qty_mx_servers(domain):
 
 
 def tls_ssl_certificate(domain):
-    """
-    Check if the domain has a valid SSL certificate.
-
-    Args:
-        domain (str): Domain name.
-
-    Returns:
-        bool: True if valid certificate found, else False.
-    """
     try:
         context = ssl.create_default_context()
         with context.wrap_socket(socket.socket(), server_hostname=domain) as s:
@@ -157,18 +95,8 @@ def tls_ssl_certificate(domain):
 
 
 def is_shortened_url(url):
-    """
-    Check if a URL is a shortened (redirect) link.
-
-    Args:
-        url (str): The full URL.
-
-    Returns:
-        bool: True if URL redirects, else False.
-    """
     try:
         response = requests.head(url, allow_redirects=True)
-        # Check if the status code is a redirection (3xx)
         if 300 <= response.status_code < 400:
             return True
         else:
@@ -178,15 +106,6 @@ def is_shortened_url(url):
 
 
 def is_domain_indexed(domain):
-    """
-    Check if the domain is indexed by Google.
-
-    Args:
-        domain (str): Domain name.
-
-    Returns:
-        bool: True if indexed, else False.
-    """
     try:
         search_url = f"https://www.google.com/search?q=site:{domain}"
         headers = {
@@ -205,15 +124,6 @@ def is_domain_indexed(domain):
 
 
 def is_url_indexed(url):
-    """
-    Check if the exact URL is indexed by Google.
-
-    Args:
-        url (str): The full URL.
-
-    Returns:
-        bool: True if indexed, else False.
-    """
     try:
         search_url = f"https://www.google.com/search?q={url}"
         headers = {
@@ -227,15 +137,6 @@ def is_url_indexed(url):
 
 
 def time_domain_activation(domain):
-    """
-    Calculate the number of days since domain registration.
-
-    Args:
-        domain (str): Domain name.
-
-    Returns:
-        int: Days since activation, or -1 on failure.
-    """
     try:
         domain_info = whois.whois(domain)
         creation_date = domain_info.creation_date[0] if isinstance(domain_info.creation_date, list) else domain_info.creation_date
@@ -246,15 +147,6 @@ def time_domain_activation(domain):
 
 
 def time_domain_expiration(domain):
-    """
-    Calculate the number of days left before the domain expires.
-
-    Args:
-        domain (str): Domain name.
-
-    Returns:
-        int: Days until expiration, or -1 on failure.
-    """
     try:
         domain_info = whois.whois(domain)
         expiration_date = domain_info.expiration_date[0] if isinstance(domain_info.expiration_date, list) else domain_info.expiration_date
@@ -263,44 +155,41 @@ def time_domain_expiration(domain):
         print(f"Expiration time error for {domain}: {e}")
         return -1
 
+
 def get_asn_ip(domain):
     try:
         ip = socket.gethostbyname(domain)
         obj = IPWhois(ip)
         res = obj.lookup_rdap()
-        return res.get("asn", -1)  # Return ASN or -1 if not found
+        return res.get("asn", -1)
     except Exception as e:
         print(f"ASN lookup failed: {e}")
         return -1
 
+
 def get_ttl(domain):
     try:
         answer = dns.resolver.resolve(domain, 'A')
-        # Return the TTL from the first answer
         return answer.rrset.ttl
     except Exception as e:
         print(f"DNS resolution failed: {e}")
-        return -1  # or 0 or np.nan as fallback
-
-def qty_ip_resolved(domain):
-    try:
-        ip_list = socket.gethostbyname_ex(domain)[-1]
-        return len(ip_list)
-    except Exception as e:
         return -1
+
 
 def qty_redirects(url):
     try:
-        response = requests.get(url, timeout=5)  # set timeout to avoid hanging
+        response = requests.get(url, timeout=5)
         return len(response.history)
     except Exception as e:
         return -1
+
+import pandas as pd
 
 class URLFeatureExtractor:
     def __init__(self, url):
         self.url = url
         self.url_components = urlparse(url)
-        self.domain = self.url_components.netloc 
+        self.domain = self.url_components.netloc
         self.directory = self.url_components.path
         self.file = self.url_components.path.split("/")[-1]
         self.parameters = self.url_components.query
@@ -314,7 +203,6 @@ class URLFeatureExtractor:
         self.components.update(self.get_url_components())
 
     def get_domain_components(self):
-
         domain_components = {
             "qty_dot_domain": self.domain.count("."),
             "qty_hyphen_domain": self.domain.count("-"),
@@ -333,16 +221,10 @@ class URLFeatureExtractor:
             "qty_hashtag_domain": self.domain.count("#"),
             "qty_dollar_domain": self.domain.count("$"),
             "qty_percent_domain": self.domain.count("%"),
-            "qty_vowels_domain": sum(
-                [self.domain.count(vowel) for vowel in "aeiouAEIOU"]
-            ),
+            "qty_vowels_domain": sum([self.domain.count(vowel) for vowel in "aeiouAEIOU"]),
             "domain_length": len(self.domain),
             "domain_in_ip": 1 if self.domain.replace(".", "").isdigit() else 0,
-            "server_client_domain": (
-                1
-                if "server" in self.domain.lower() or "client" in self.domain.lower()
-                else 0
-            ),
+            "server_client_domain": (1 if "server" in self.domain.lower() or "client" in self.domain.lower() else 0),
         }
         return domain_components
 
@@ -367,11 +249,7 @@ class URLFeatureExtractor:
             "qty_percent_directory": self.directory.count("%"),
             "directory_length": len(self.directory),
         }
-        return (
-            directory_components
-            if self.directory
-            else {key: -1 for key in directory_components}
-        )
+        return directory_components if self.directory else {key: -1 for key in directory_components}
 
     def get_file_components(self):
         file_components = {
@@ -416,20 +294,8 @@ class URLFeatureExtractor:
             "qty_dollar_params": self.parameters.count("$"),
             "qty_percent_params": self.parameters.count("%"),
             "params_length": len(self.parameters),
-            "tld_present_params": (
-                1
-                if self.parameters.endswith(".com")
-                or self.parameters.endswith(".org")
-                or self.parameters.endswith(".net")
-                else 0
-            ),
-            "qty_params": len(self.parameters.split("&")),
         }
-        return (
-            parameters_components
-            if self.parameters
-            else {key: -1 for key in parameters_components}
-        )
+        return parameters_components if self.parameters else {key: -1 for key in parameters_components}
 
     def get_resolving_components(self):
         try:
@@ -470,13 +336,14 @@ class URLFeatureExtractor:
             "domain_google_index": 0,
             "url_shortened": 0,
         }
-        for key, value in resolving_components.items():
-               print(key, value)
-        
         return resolving_components
-    
+
     def get_external_services_components(self):
-        return {}
+        return {
+            "domain_spf": domain_spf(self.domain),
+            "url_indexed": is_url_indexed(self.url),
+            "domain_indexed": is_domain_indexed(self.domain),
+        }
 
     def get_url_components(self):
         return {
@@ -504,53 +371,49 @@ class URLFeatureExtractor:
             ),
         }
 
-    def get_all_components(self):
-        return self.components
-
-    def get_all_components_values(self):
-        return list(self.components.values())
-
-    def get_all_components_keys(self):
-        return list(self.components.keys())
+def extract_url_features(url: str, model_feature_names_path: str = None) -> pd.DataFrame:
+ 
+    """
+    Extracts features from the provided URL.
     
-    def get_features_as_dataframe(self):
-        data = self.get_all_components()
-        a = [
-            data["qty_slash_url"],
-            data["time_domain_activation"],
-            data["qty_dot_domain"],
-            data["ttl_hostname"],
-            data["asn_ip"],
-            data["time_domain_expiration"],
-            data["time_response"],
-            data["qty_dot_url"],
-            data["qty_vowels_domain"],
-            data["qty_hyphen_url"],
-            data["qty_hyphen_params"],
-            data["qty_mx_servers"],
-            data["qty_slash_params"],
-            data["qty_percent_params"],
-            data["qty_nameservers"],
-            data["qty_redirects"],
-            data["qty_equal_url"],
-            data["qty_ip_resolved"],
-            data["qty_underline_url"],
-            data["tls_ssl_certificate"],
-            data["domain_spf"],
-            data["qty_tld_url"],
-            data["qty_hyphen_domain"],
-            data["url_shortened"],
-            data["qty_percent_url"],
-        ]
-        columns = [
-            "qty_slash_url", "time_domain_activation", "qty_dot_domain",
-            "ttl_hostname", "asn_ip", "time_domain_expiration",
-            "time_response", "qty_dot_url", "qty_vowels_domain",
-            "qty_hyphen_url", "qty_hyphen_params", "qty_mx_servers",
-            "qty_slash_params", "qty_percent_params", "qty_nameservers",
-            "qty_redirects", "qty_equal_url", "qty_ip_resolved",
-            "qty_underline_url", "tls_ssl_certificate", "domain_spf",
-            "qty_tld_url", "qty_hyphen_domain", "url_shortened",
-            "qty_percent_url"
-        ]
-        return pd.DataFrame([a], columns=columns)
+    Parameters:
+        url (str): The URL from which features are extracted.
+        model_feature_names_path (str): Path to the pickle file containing the feature names. Defaults to None.
+    
+    Returns:
+        pd.DataFrame: A DataFrame with the extracted features.
+    """
+
+    # Initialize the URLFeatureExtractor with the provided URL
+    feature_extractor = URLFeatureExtractor(url)
+    
+    # Load model_feature_names from pickle if path is provided
+    model_feature_names = None
+    if model_feature_names_path:
+        try:
+            with open(model_feature_names_path, 'rb') as f:
+                model_feature_names = pickle.load(f)
+        except Exception as e:
+            raise Exception(f"Error loading model feature names from pickle file: {str(e)}")
+    
+    # Extract all features
+    all_features = {
+        **feature_extractor.get_domain_components(),
+        **feature_extractor.get_directory_components(),
+        **feature_extractor.get_file_components(),
+        **feature_extractor.get_parameters_components(),
+        **feature_extractor.get_resolving_components(),
+        **feature_extractor.get_external_services_components(),
+        **feature_extractor.get_url_components(),
+    }
+    
+    # If model_feature_names is provided, extract only those features in the specified order
+    if model_feature_names is not None and len(model_feature_names) > 0:
+        ordered_features = {feature: all_features[feature] for feature in model_feature_names if feature in all_features}
+        return pd.DataFrame([ordered_features])
+    
+    # Otherwise, return all features
+    return pd.DataFrame([all_features])
+
+
+

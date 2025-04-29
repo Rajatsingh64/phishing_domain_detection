@@ -1,0 +1,20 @@
+artifact
+logs
+saved_models
+*.egg-info
+.env
+myenv
+data_dump.py
+main.py
+README.md
+test.ipynb
+notebook/
+demo
+Project Details
+service_credentials.json
+dataset/
+credentials_to_base64.py
+test.ipynb
+test.py
+**/__pycache__/
+*.pyc

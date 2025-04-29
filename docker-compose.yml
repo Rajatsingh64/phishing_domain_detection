@@ -1,0 +1,70 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U airflow"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  airflow:
+    image: ${IMAGE_NAME}
+    container_name: airflow_container
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW_HOME: /app/airflow
+      BUCKET_NAME: ${BUCKET_NAME}
+      GOOGLE_CREDENTIALS_B64: ${GOOGLE_CREDENTIALS_B64}
+      Table_ID: ${Table_ID}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_REGION: ${AWS_REGION}
+      AIRFLOW_EMAIL: ${AIRFLOW_EMAIL}
+      AIRFLOW_USERNAME: ${AIRFLOW_USERNAME}
+      AIRFLOW_PASSWORD: ${AIRFLOW_PASSWORD}
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+      AIRFLOW__SCHEDULER__SCHEDULER_HEARTBEAT_SEC: "10"
+      AIRFLOW__CORE__STORE_SERIALIZED_DAGS: "True"
+      AIRFLOW__SCHEDULER__SCHEDULER_HEALTH_CHECK_THRESHOLD: "100"
+      AIRFLOW__SCHEDULER__SCHEDULER_ZOMBIE_TASK_THRESHOLD: "600"
+      AIRFLOW__DATABASE__SQL_ALCHEMY_POOL_SIZE: "50"
+      AIRFLOW__DATABASE__SQL_ALCHEMY_MAX_OVERFLOW: "50"
+    volumes:
+      - airflow_logs:/app/airflow/logs
+      - airflow_dags:/app/airflow/dags
+    command: ["airflow"]
+
+  streamlit:
+    image: ${IMAGE_NAME}
+    container_name: streamlit_container
+    restart: always
+    ports:
+      - "8501:8501"
+    environment:
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_DEFAULT_REGION: ${AWS_REGION}
+      BUCKET_NAME: ${BUCKET_NAME}
+    command: ["streamlit"]
+
+volumes:
+  postgres_data:
+  airflow_dags:
+  airflow_logs:

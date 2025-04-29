@@ -179,3 +179,4 @@ pyproject.toml
 credentials_to_base64.py
 artifact/
 logs/
+saved_models/

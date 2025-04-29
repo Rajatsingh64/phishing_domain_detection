@@ -3,34 +3,53 @@ from dataclasses import dataclass
 @dataclass
 class DataIngestionArtifact:
     """
-    Class to represent the artifacts generated during the data ingestion process.
-
-    Attributes:
-        feature_store_file_path (str): Path to the feature store file where the entire dataset is stored.
-        train_file_path (str): Path to the training dataset after the split.
-        test_file_path (str): Path to the testing dataset after the split.
+    Represents outputs generated during the data ingestion process.
     """
-
-    feature_store_file_path: str
-    train_file_path: str
-    test_file_path: str
+    feature_store_file_path: str  # Path to complete dataset
+    train_file_path: str          # Path to training dataset
+    test_file_path: str           # Path to testing dataset
 
 
 @dataclass
 class DataValidationArtifact:
-    
-    report_yml_file_path: str
+    """
+    Represents outputs from the data validation step.
+    """
+    report_yml_file_path: str  # Path to validation report YAML
 
 
 @dataclass
 class DataTransformationArtifact:
-    
-    transformed_original_data_file_path:str
-   
+    """
+    Represents outputs from the data transformation step.
+    """
+    transformed_original_data_file_path: str  # Path to transformed dataset
+
+
 @dataclass
 class ModelTrainingArtifact:
+    """
+    Represents outputs from the model training step.
+    """
+    model_file_path: str                    # Path to saved model
+    train_accuracy_score: float             # Training accuracy score
+    test_accuracy_score: float              # Testing accuracy score
+    model_feature_names_file_path: str      # Path to top features model
 
-    model_file_path: str
-    train_accuracy_score:float
-    test_accuracy_score:float
-    top_features_model_trained_file_path: str
+
+@dataclass
+class ModelEvaluationArtifact:
+    """
+    Represents evaluation results for the trained model.
+    """
+    is_model_accepted: bool   # Whether model is accepted
+    improved_accuracy: bool   # Whether model improved over previous
+
+
+@dataclass
+class ModelPusherArtifact:
+    """
+    Represents artifacts related to model pushing (deployment).
+    """
+    pusher_model_dir: str     # Directory where model is pushed
+    saved_model_dir: str      # Directory where model is saved

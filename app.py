@@ -3,6 +3,7 @@ import pandas as pd
 import dill
 import time
 from phishing.url_predictor import predictor
+from phishing.predictor import ModelResolver
 
 # === Load custom styling ===
 with open("templates/style.css", encoding="utf-8") as f:
@@ -12,11 +13,15 @@ with open("templates/style.css", encoding="utf-8") as f:
 with open("templates/index.html", encoding="utf-8") as f:
     st.markdown(f.read(), unsafe_allow_html=True)
 
+resolver=ModelResolver()
+model_path=resolver.get_latest_model_path()
+model_feature_names_file_path=resolver.get_latest_top_features_file_path()
+
 # === Load model ===
 @st.cache_resource
 def load_model():
     """Load and return the trained phishing detection model from file."""
-    with open("./saved_model/0/model.pkl", "rb") as file:
+    with open(model_path, "rb") as file:
         return dill.load(file)
 
 # Add custom CSS to create space after the container
@@ -60,7 +65,10 @@ if page == 'Home':
                 for url in url_list:
                     try:
                         # Make prediction using the model
-                        prediction, prediction_prob = predictor(model=model, url=url)
+                        prediction, prediction_prob = predictor(model=model, #loaded model
+                                                                url=url ,
+                                                                 model_feature_names_file_path=model_feature_names_file_path #path of trained features names pickle file
+                                                        )
                         confidence = max(prediction_prob[0]) * 100
                         time.sleep(0.2)  # Optional delay to simulate processing time
                         # Store result in session state

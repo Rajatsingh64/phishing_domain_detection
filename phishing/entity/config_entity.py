@@ -1,6 +1,6 @@
 """
-Configuration classes for MLOps Training Pipeline.
-Handles paths and parameters required for data ingestion and artifact management.
+Configuration classes for the MLOps Training Pipeline.
+Handles all paths and parameters needed for data ingestion, transformation, training, and deployment.
 """
 
 from datetime import datetime
@@ -11,19 +11,18 @@ import sys
 
 class TrainingPipelineConfig:
     """
-    Configuration class for setting up the MLOps training pipeline.
-    It creates an artifact directory to store all outputs generated during the pipeline.
+    Sets up the main artifact directory for the MLOps training pipeline.
     """
 
     def __init__(self):
         """
-        Initialize the artifact directory with a timestamp to avoid overwriting previous runs.
+        Initialize artifact directory with a timestamp to separate each run.
         """
         try:
             logging.info(f"{'>'*20} MLOps Training Pipeline Initialization {'<'*20}")
             self.artifact_dir = os.path.join(
-                os.getcwd(), 
-                "artifact", 
+                os.getcwd(),
+                "artifact",
                 f"{datetime.now().strftime('%y%m%d__%H%M%S')}"
             )
         except Exception as e:
@@ -31,102 +30,171 @@ class TrainingPipelineConfig:
 
 class DataIngestionConfig:
     """
-    Configuration class for managing paths and parameters related to data ingestion.
+    Configuration for managing paths and parameters related to data ingestion.
     """
 
     def __init__(self, training_pipeline_config: TrainingPipelineConfig):
         """
-        Initialize the data ingestion configuration using the artifact directory from TrainingPipelineConfig.
-
-        Args:
-            training_pipeline_config (TrainingPipelineConfig): Instance containing artifact directory path.
+        Initialize data ingestion config with paths for feature store, train and test datasets.
         """
         try:
-            # Create base directory for data ingestion artifacts
             self.data_ingestion_dir = os.path.join(
-                training_pipeline_config.artifact_dir, 
+                training_pipeline_config.artifact_dir,
                 "data_ingestion"
             )
-
-            # Path to store the complete feature store dataset
             self.feature_store_file_path = os.path.join(
-                self.data_ingestion_dir, 
-                "feature store", 
+                self.data_ingestion_dir,
+                "feature_store",
                 "main_dataset.csv"
             )
-
-            # Paths to store the train and test datasets after split
             self.train_file_path = os.path.join(
-                self.data_ingestion_dir, 
-                "datasets", 
+                self.data_ingestion_dir,
+                "datasets",
                 "train.csv"
             )
-
             self.test_file_path = os.path.join(
-                self.data_ingestion_dir, 
-                "datasets", 
+                self.data_ingestion_dir,
+                "datasets",
                 "test.csv"
             )
-
-            # Proportion of the dataset to be used as test data
-            self.test_threshold = 0.2
-
+            self.test_threshold = 0.2  # 20% test size
         except Exception as e:
             raise PhishingException(e, sys)
-
 
 class DataValidationConfig:
+    """
+    Configuration for managing data validation steps and settings.
+    """
 
-    def __init__(self, training_pipeline_config:TrainingPipelineConfig):
-
+    def __init__(self, training_pipeline_config: TrainingPipelineConfig):
+        """
+        Initialize data validation config with paths for validation reports.
+        """
         try:
-            
-            self.data_validaion_dir=os.path.join(
-                training_pipeline_config.artifact_dir ,
+            self.data_validation_dir = os.path.join(
+                training_pipeline_config.artifact_dir,
                 "data_validation"
             )
-        
-            self.report_yaml_file_path=os.path.join(
-                self.data_validaion_dir , "report.yml"
-
+            self.report_yaml_file_path = os.path.join(
+                self.data_validation_dir,
+                "report.yml"
             )
-
-            self.missing_columns_threshold=0.2
-
-            self.base_data_file_path=os.path.join(
-                'dataset/dataset_full.csv'
+            self.missing_columns_threshold = 0.2  # Allowable missing column threshold
+            self.base_data_file_path = os.path.join(
+                "base_dataset.csv"
             )
-
         except Exception as e:
             raise PhishingException(e, sys)
-        
 
 class DataTransformationConfig:
+    """
+    Configuration for managing data transformation settings.
+    """
 
-    def __init__(self, training_pipeline_config:TrainingPipelineConfig):
-
+    def __init__(self, training_pipeline_config: TrainingPipelineConfig):
+        """
+        Initialize data transformation config with paths for transformed datasets.
+        """
         try:
-            self.data_transformation_dir=os.path.join(training_pipeline_config.artifact_dir , "data_transformation")
-            self.transformed_data_dir = os.path.join(self.data_transformation_dir, "transformed")
-            self.transformed_original_data_file_path=os.path.join(self.transformed_data_dir , "main.csv")
-            self.correlation_threshold=0.8
-
+            self.data_transformation_dir = os.path.join(
+                training_pipeline_config.artifact_dir,
+                "data_transformation"
+            )
+            self.transformed_data_dir = os.path.join(
+                self.data_transformation_dir,
+                "transformed"
+            )
+            self.transformed_original_data_file_path = os.path.join(
+                self.transformed_data_dir,
+                "main.csv"
+            )
+            self.correlation_threshold = 0.9  # Threshold for feature correlation filtering
         except Exception as e:
             raise PhishingException(e, sys)
-        
 
 class ModelTrainingConfig:
+    """
+    Configuration for model training parameters and output paths.
+    """
 
-    def __init__(self, training_pipeline_config:TrainingPipelineConfig):
-
+    def __init__(self, training_pipeline_config: TrainingPipelineConfig):
+        """
+        Initialize model training config with paths for model files and plots.
+        """
         try:
-            self.model_training_dir=os.path.join(training_pipeline_config.artifact_dir , "model training")
-            self.model_file_path=os.path.join(self.model_training_dir , "model" , "model.pkl")
-            self.accuarcy_threshold=0.9
-            self.overfitting_threshold=0.05
-            self.roc_auc_plot_image_path=os.path.join(self.model_training_dir , "plots" , "roc_auc_plot.jpg")
-            self.top_features_model_trained_file_path=os.path.join(self.model_training_dir , "top_features.pkl")
-            self.top_features_plot_file_path=os.path.join(self.model_training_dir , "plots" , "Top_Feature_plot.jpg")
-        
+            self.model_training_dir = os.path.join(
+                training_pipeline_config.artifact_dir,
+                "model_training"
+            )
+            self.model_file_path = os.path.join(
+                self.model_training_dir,
+                "model",
+                "model.pkl"
+            )
+            self.accuracy_threshold = 0.9  # Minimum acceptable model accuracy
+            self.overfitting_threshold = 0.05  # Acceptable overfitting gap
+            self.roc_auc_plot_image_path = os.path.join(
+                self.model_training_dir,
+                "plots",
+                "roc_auc_plot.jpg"
+            )
+            self.model_feature_names_file_path = os.path.join(
+                self.model_training_dir,
+                "model_feature_names.pkl"
+            )
+            self.top_features_plot_file_path = os.path.join(
+                self.model_training_dir,
+                "plots",
+                "top_feature_plot.jpg"
+            )
+        except Exception as e:
+            raise PhishingException(e, sys)
+
+class ModelEvaluationConfig:
+    """
+    Configuration for evaluating model performance after training.
+    """
+
+    def __init__(self, training_pipeline_config: TrainingPipelineConfig):
+        """
+        Initialize model evaluation config with thresholds for performance change.
+        """
+        try:
+            self.model_accuracy_change_threshold = 0.02  # Minimum accuracy change needed to accept a new model
+        except Exception as e:
+            raise PhishingException(e, sys)
+
+class ModelPusherConfig:
+    """
+    Configuration for saving and pushing the final model for deployment.
+    """
+
+    def __init__(self, training_pipeline_config: TrainingPipelineConfig):
+        """
+        Initialize model pusher config with paths for saving models.
+        """
+        try:
+            self.model_pusher_dir = os.path.join(
+                training_pipeline_config.artifact_dir,
+                "model_pusher"
+            )
+            
+            self.saved_model_dir = os.path.join(
+                "saved_models"
+            )
+            
+            self.pusher_model_dir = os.path.join(
+                self.model_pusher_dir,
+                "saved_models"
+            )
+            
+            self.pusher_model_path = os.path.join(
+                self.pusher_model_dir,
+                "model.pkl"
+            )
+            self.pusher_model_features_names_file_path = os.path.join(
+                self.pusher_model_dir,
+                "model_feature_names.pkl"
+            )
         except Exception as e:
             raise PhishingException(e, sys)

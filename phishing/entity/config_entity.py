@@ -22,7 +22,7 @@ class TrainingPipelineConfig:
             logging.info(f"{'>'*20} MLOps Training Pipeline Initialization {'<'*20}")
             self.artifact_dir = os.path.join(
                 os.getcwd(),
-                "artifact",
+                "artifacts",
                 f"{datetime.now().strftime('%y%m%d__%H%M%S')}"
             )
         except Exception as e:

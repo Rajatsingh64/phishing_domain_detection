@@ -12,7 +12,7 @@
 Detecting phishing domains using machine learning techniques to enhance cybersecurity by identifying malicious websites.
 
 ---
-### **Streamlit App Overview:**
+### **Streamlit App :**
 
 <p align="center">
   <img src="demo/assets/gif_demo1.gif" alt="Phishing Domain Detection Demo" width="1000" height="400"/>
@@ -30,7 +30,7 @@ Detecting phishing domains using machine learning techniques to enhance cybersec
 The S3 bucket stores all generated outputs, including:  
 - ✅ **Saved Models**  
 - 📂 **Clustered Files**  
-- 🔍 **Artifacts*
+- 🔍 **Artifacts**
 
 <p align="center">
   <img src="demo/assets/gif_demo3.gif" alt="Phishing Domain Detection Demo" width="1000" height="400"/>

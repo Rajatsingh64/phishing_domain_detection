@@ -32,7 +32,7 @@ The S3 bucket stores all generated outputs, including:
 - 🔍 **Artifacts**
 
 <p align="center">
-  <img src="demo/assets/gif_demo3.gif" alt="Phishing Domain Detection Demo" width="1000" height="500"/>
+  <img src="demo/assets/gif_demo3.gif" alt="Phishing Domain Detection Demo" width="800" height="300"/>
 </p>
 
 ## 💻 Features

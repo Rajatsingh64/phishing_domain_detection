@@ -22,18 +22,17 @@ Detecting phishing domains using machine learning techniques to enhance cybersec
 ### **Model Training(CT) Overview:**
 
 <p align="center">
-  <img src="demo/assets/gif_demo2.gif" alt="Phishing Domain Detection Demo" width="1000" height="400"/>
+  <img src="demo/assets/gif_demo2.gif" alt="Phishing Domain Detection Demo" width="1000" height="500"/>
 </p>
 
 ---
 ### ☁️ **S3 Bucket Outputs**  
 The S3 bucket stores all generated outputs, including:  
 - ✅ **Saved Models**  
-- 📂 **Clustered Files**  
 - 🔍 **Artifacts**
 
 <p align="center">
-  <img src="demo/assets/gif_demo3.gif" alt="Phishing Domain Detection Demo" width="1000" height="400"/>
+  <img src="demo/assets/gif_demo3.gif" alt="Phishing Domain Detection Demo" width="1000" height="500"/>
 </p>
 
 ## 💻 Features

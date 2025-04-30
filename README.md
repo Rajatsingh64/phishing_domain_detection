@@ -1,7 +1,7 @@
 ![Project Status](https://img.shields.io/badge/Project%20Status-Completed-green?style=for-the-badge&logo=github) 
 
 <p align="center">
-  <img src="demo/assets/image1.png" alt="Phishing Domain Detection" width="1000" height="400"/>
+  <img src="demo/assets/image1.png" alt="Phishing Domain Detection" width="1000" height="500"/>
 </p>
 
 ## 📂 Project Navigation  
@@ -37,7 +37,7 @@ This project is designed with a modular, automated pipeline and is deployed as *
 - Streamlit UI for live predictions with the most recent model
 - Easy deployment in cloud or local environments
 
---
+---
 ### **App  Overview:**
 
 <p align="center">

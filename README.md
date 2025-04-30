@@ -8,7 +8,7 @@
 
 📁 [**Notebooks**](notebook/) | 📁 [**Pipelines**](phishing/pipeline/) | 📁 [**Airflow DAGs**](airflow/dags/) | 📁 [**Components**](phishing/components)
 
-## 📌 Project Overview
+### 📌 Project Overview
 
 Detecting phishing domains using machine learning techniques to enhance cybersecurity by identifying malicious websites.
 
@@ -37,13 +37,11 @@ This project is designed with a modular, automated pipeline and is deployed as *
 - Streamlit UI for live predictions with the most recent model
 - Easy deployment in cloud or local environments
 
-
-
----
-### **Streamlit App :**
+--
+### **App  Overview:**
 
 <p align="center">
-  <img src="demo/assets/gif_demo1.gif" alt="Phishing Domain Detection Demo" width="1000" height="400"/>
+  <img src="demo/assets/gif_demo1.gif" alt="Phishing Domain Detection Demo" width="1000" height="500"/>
 </p>
 
 ---

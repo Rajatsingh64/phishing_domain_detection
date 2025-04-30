@@ -6,10 +6,38 @@
 
 ## 📂 Project Navigation  
 
-📁 [**Notebooks**](notebook/) | 📁 [**Pipelines**](phishing/pipeline/) | 📁 [**Airflow DAGs**](airflow/dags/) | 📁 [**Docs**](docs/) | 📁 [**Components**](phishing/components)
+📁 [**Notebooks**](notebook/) | 📁 [**Pipelines**](phishing/pipeline/) | 📁 [**Airflow DAGs**](airflow/dags/) | 📁 [**Components**](phishing/components)
 
 ## 📌 Project Overview
+
 Detecting phishing domains using machine learning techniques to enhance cybersecurity by identifying malicious websites.
+
+This project is designed with a modular, automated pipeline and is deployed as **three Docker containers**:
+
+- **PostgreSQL Server**  
+  Stores training data, extracted features, and logs.
+
+- **Apache Airflow**  
+  Handles the **continuous training (CT)** pipeline, including:
+  - Automated data ingestion and preprocessing
+  - Feature extraction and selection
+  - Model training and evaluation
+  - Syncing the best-performing model and feature extractor to an S3 bucket
+
+- **Streamlit App**  
+  Provides a user-friendly web interface for:
+  - Predicting phishing domains in real time
+  - **Automatically syncing the latest model and feature extractor** from S3 on startup
+
+### ⚙️ Key Features
+
+- Fully containerized setup using `docker-compose`
+- Automated machine learning pipeline using Airflow DAGs
+- Best model selection and S3 synchronization
+- Streamlit UI for live predictions with the most recent model
+- Easy deployment in cloud or local environments
+
+
 
 ---
 ### **Streamlit App :**

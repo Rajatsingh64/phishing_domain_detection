@@ -34,8 +34,8 @@ This project is designed with a modular, automated pipeline and is deployed as *
 - Fully containerized setup using `docker-compose`
 - Automated machine learning pipeline using Airflow DAGs
 - Best model selection and S3 synchronization
-- Streamlit UI for live predictions with the most recent model
 - Easy deployment in cloud or local environments
+
 - **Machine Learning Model:** Detect phishing domains using machine learning.
 - **Real-time Detection:** Fast, real-time detection of malicious websites.
 - **Interactive UI:** User-friendly and interactive web interface to input domain URLs

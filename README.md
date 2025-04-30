@@ -36,6 +36,9 @@ This project is designed with a modular, automated pipeline and is deployed as *
 - Best model selection and S3 synchronization
 - Streamlit UI for live predictions with the most recent model
 - Easy deployment in cloud or local environments
+-**Machine Learning Model:** Detect phishing domains using machine learning.
+- **Real-time Detection:** Fast, real-time detection of malicious websites.
+- **Interactive UI:** User-friendly and interactive web interface to input domain URLs
 
 ---
 ### **App  Overview:**
@@ -58,14 +61,9 @@ The S3 bucket stores all generated outputs, including:
 - 🔍 **Artifacts**
 
 <p align="center">
-  <img src="demo/assets/gif_demo3.gif" alt="Phishing Domain Detection Demo" width="800" height="300"/>
+  <img src="demo/assets/gif_demo3.gif" alt="Phishing Domain Detection Demo" width="1000" height="500"/>
 </p>
 
-## 💻 Features
-
-- **Machine Learning Model:** Detect phishing domains using machine learning.
-- **Real-time Detection:** Fast, real-time detection of malicious websites.
-- **Interactive UI:** User-friendly and interactive web interface to input domain URLs.
 ---
 
 ## 🚀 Getting Started

@@ -25,7 +25,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 RUN python -m pip install --upgrade pip setuptools wheel && \
-    python -m pip install --no-cache-dir --prefer-binary -r requirements.txt && 
+    python -m pip install --no-cache-dir --prefer-binary -r requirements.txt 
 
 COPY . /app/
 

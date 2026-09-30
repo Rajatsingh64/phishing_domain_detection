@@ -73,7 +73,7 @@ class ModelEvaluation:
             curr_model_score = accuracy_score(target_df, y_pred_current)
             logging.info(f"Current model accuracy: {curr_model_score}")
 
-            if curr_model_score > prev_model_score:
+            if curr_model_score <= prev_model_score:
                 logging.info("The current model is not better than the previous model.")
                 raise Exception("Current trained model is not better than the previous model.")
 

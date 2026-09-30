@@ -18,13 +18,18 @@ RUN apt-get update && \
         build-essential \
         gcc \
         libpq-dev \
+        postgresql-client \
         curl \
         awscli && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN python -m pip install --upgrade pip setuptools wheel
-RUN python -m pip install --no-cache-dir -r requirements.txt
+RUN python -m pip install --upgrade pip setuptools wheel && \
+    python -m pip install --no-cache-dir --prefer-binary -r requirements.txt && \
+    python - <<'PY'
+import psycopg2
+print(f"psycopg2-ok:{psycopg2.__version__}")
+PY
 
 COPY . /app/
 

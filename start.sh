@@ -1,6 +1,20 @@
 #!/bin/sh
 set -e
 
+: "${AIRFLOW_EMAIL:=admin@example.com}"
+: "${AIRFLOW_USERNAME:=admin}"
+: "${AIRFLOW_PASSWORD:=admin}"
+: "${AWS_REGION:=us-east-1}"
+
+python - <<'PY'
+import importlib.util
+import sys
+spec = importlib.util.find_spec("psycopg2")
+if spec is None:
+    raise SystemExit("psycopg2 is not installed. Rebuild the Docker image after installing PostgreSQL dependencies.")
+print("psycopg2-ok")
+PY
+
 # Common S3 sync functionality for both Airflow and Streamlit
 start_s3_sync() {
   echo "Starting S3 sync (if BUCKET_NAME is set)..."
@@ -18,8 +32,13 @@ if [ "$1" = "airflow" ]; then
   start_s3_sync  # Perform the S3 sync
 
   echo "Migrating Airflow DB..."
-  airflow db upgrade
-  echo "Airflow DB migration completed."
+  if airflow db migrate >/dev/null 2>&1; then
+    echo "Airflow DB migration completed."
+  else
+    echo "Airflow db migrate not available; trying legacy upgrade path..."
+    airflow db upgrade
+    echo "Legacy Airflow DB upgrade completed."
+  fi
 
   echo "Checking if Admin user exists..."
   if ! airflow users list | grep -w "$AIRFLOW_USERNAME" > /dev/null 2>&1; then

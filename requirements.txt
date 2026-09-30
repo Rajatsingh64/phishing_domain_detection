@@ -49,3 +49,5 @@ apache-airflow==3.3.2
 psycopg2-binary==2.9.13
 
 asyncpg==0.31.0
+
+apache-airflow-providers-fab

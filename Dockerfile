@@ -28,9 +28,9 @@ RUN python -m pip install --no-cache-dir -r requirements.txt
 
 COPY . /app/
 
-COPY . /app/
-
-RUN chmod 755 /app/start.sh && \
+RUN sed -i 's/\r$//' /app/start.sh && \
+    chmod +x /app/start.sh && \
+    chmod 755 /app/start.sh && \
     mkdir -p /app/airflow/logs /app/saved_models
 
 EXPOSE 8080 8501

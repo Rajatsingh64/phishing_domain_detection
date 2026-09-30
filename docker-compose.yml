@@ -1,0 +1,76 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: phishing_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U airflow -d airflow"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  airflow:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: phishing-airflow:3.13
+    container_name: phishing_airflow
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW_HOME: /app/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+      AIRFLOW__CORE__STORE_SERIALIZED_DAGS: "True"
+      AIRFLOW__SCHEDULER__SCHEDULER_HEARTBEAT_SEC: "10"
+      AIRFLOW__SCHEDULER__SCHEDULER_HEALTH_CHECK_THRESHOLD: "100"
+      AIRFLOW__SCHEDULER__SCHEDULER_ZOMBIE_TASK_THRESHOLD: "600"
+      AIRFLOW__DATABASE__SQL_ALCHEMY_POOL_SIZE: "50"
+      AIRFLOW__DATABASE__SQL_ALCHEMY_MAX_OVERFLOW: "50"
+      MONGO_URI: ${MONGO_URI}
+      MONGO_DB_NAME: ${MONGO_DB_NAME:-phishing_db}
+      MONGO_COLLECTION_NAME: ${MONGO_COLLECTION_NAME:-phishing_data}
+      AIRFLOW_EMAIL: ${AIRFLOW_EMAIL:-admin@example.com}
+      AIRFLOW_USERNAME: ${AIRFLOW_USERNAME:-admin}
+      AIRFLOW_PASSWORD: ${AIRFLOW_PASSWORD:-admin}
+    volumes:
+      - ./airflow/dags:/app/airflow/dags
+      - ./airflow/logs:/app/airflow/logs
+      - ./saved_models:/app/saved_models
+    command: ["airflow"]
+
+  streamlit:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: phishing-app:3.13
+    container_name: phishing_streamlit
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+    environment:
+      MONGO_URI: ${MONGO_URI}
+      MONGO_DB_NAME: ${MONGO_DB_NAME:-phishing_db}
+      MONGO_COLLECTION_NAME: ${MONGO_COLLECTION_NAME:-phishing_data}
+    volumes:
+      - .:/app
+      - ./saved_models:/app/saved_models
+    command: ["streamlit"]
+
+volumes:
+  postgres_data: { }

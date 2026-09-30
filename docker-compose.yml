@@ -44,12 +44,11 @@ services:
       Table_ID: ${Table_ID}
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
-      AWS_DEFAULT_REGION: ${AWS_REGION:-us-east-1}
-      AWS_REGION: ${AWS_REGION:-us-east-1}
+      AWS_REGION: ${AWS_REGION}
       BUCKET_NAME: ${BUCKET_NAME}
-      AIRFLOW_EMAIL: ${AIRFLOW_EMAIL:-admin@example.com}
-      AIRFLOW_USERNAME: ${AIRFLOW_USERNAME:-admin}
-      AIRFLOW_PASSWORD: ${AIRFLOW_PASSWORD:-admin}
+      AIRFLOW_EMAIL: ${AIRFLOW_EMAIL}
+      AIRFLOW_USERNAME: ${AIRFLOW_USERNAME}
+      AIRFLOW_PASSWORD: ${AIRFLOW_PASSWORD}
     volumes:
       - ./airflow/dags:/app/airflow/dags
       - ./airflow/logs:/app/airflow/logs

@@ -1,73 +1,200 @@
 #!/bin/sh
+
 set -e
 
-: "${AIRFLOW_EMAIL:=admin@example.com}"
-: "${AIRFLOW_USERNAME:=admin}"
-: "${AIRFLOW_PASSWORD:=admin}"
-: "${AWS_REGION:=us-east-1}"
+# ==================================================
+# Required environment variables
+# ==================================================
 
-python - <<'PY'
+: "${AIRFLOW_EMAIL:?AIRFLOW_EMAIL is required}"
+: "${AIRFLOW_USERNAME:?AIRFLOW_USERNAME is required}"
+: "${AIRFLOW_PASSWORD:?AIRFLOW_PASSWORD is required}"
+: "${AWS_REGION:?AWS_REGION is required}"
+: "${BUCKET_NAME:?BUCKET_NAME is required}"
+
+# ==================================================
+# AIRFLOW
+# ==================================================
+
+if [ "$1" = "airflow" ]; then
+
+    echo "========================================"
+    echo "Starting Airflow"
+    echo "========================================"
+
+    echo "Python version:"
+    python --version
+
+    echo "Airflow version:"
+    airflow version
+
+    # --------------------------------------------------
+    # Check psycopg2
+    # --------------------------------------------------
+
+    echo "Checking psycopg2..."
+
+    python - <<'PY'
 import importlib.util
-import sys
+
 spec = importlib.util.find_spec("psycopg2")
+
 if spec is None:
-    raise SystemExit("psycopg2 is not installed. Rebuild the Docker image after installing PostgreSQL dependencies.")
-print("psycopg2-ok")
+    raise SystemExit(
+        "ERROR: psycopg2 is not installed."
+    )
+
+import psycopg2
+
+print(f"psycopg2-ok: {psycopg2.__version__}")
 PY
 
-# Common S3 sync functionality for both Airflow and Streamlit
-start_s3_sync() {
-  echo "Starting S3 sync (if BUCKET_NAME is set)..."
-  if [ -n "$BUCKET_NAME" ]; then
+    # --------------------------------------------------
+    # S3 sync
+    # --------------------------------------------------
+
+    echo "Starting S3 sync..."
+
     mkdir -p /app/saved_models
-    aws s3 sync s3://"$BUCKET_NAME"/saved_models /app/saved_models
+
+    aws s3 sync \
+        "s3://${BUCKET_NAME}/saved_models" \
+        /app/saved_models
+
     echo "Saved models sync complete."
-  else
-    echo "BUCKET_NAME is not set. Skipping S3 sync."
-  fi
-}
 
-# Airflow section
-if [ "$1" = "airflow" ]; then
-  start_s3_sync  # Perform the S3 sync
+    # --------------------------------------------------
+    # Airflow database migration
+    # --------------------------------------------------
 
-  echo "Migrating Airflow DB..."
-  if airflow db migrate >/dev/null 2>&1; then
-    echo "Airflow DB migration completed."
-  else
-    echo "Airflow db migrate not available; trying legacy upgrade path..."
-    airflow db upgrade
-    echo "Legacy Airflow DB upgrade completed."
-  fi
+    echo "Migrating Airflow database..."
 
-  echo "Checking if Admin user exists..."
-  if ! airflow users list | grep -w "$AIRFLOW_USERNAME" > /dev/null 2>&1; then
-    echo "Creating Admin user..."
-    airflow users create \
-      --email "$AIRFLOW_EMAIL" \
-      --firstname "Admin" \
-      --lastname "User" \
-      --password "$AIRFLOW_PASSWORD" \
-      --role "Admin" \
-      --username "$AIRFLOW_USERNAME"
-  else
-    echo "Admin user exists."
-  fi
+    airflow db migrate
 
-  # Start Airflow scheduler in the background
-  nohup airflow scheduler &
+    echo "Airflow database migration completed."
 
-  # Start Airflow webserver
-  airflow webserver
+    # --------------------------------------------------
+    # Create Airflow admin user
+    # --------------------------------------------------
 
-# Streamlit section
+    echo "Checking Airflow admin user..."
+
+    if airflow users list 2>/dev/null | grep -w "$AIRFLOW_USERNAME" > /dev/null 2>&1; then
+
+        echo "Airflow user already exists."
+
+    else
+
+        echo "Creating Airflow admin user..."
+
+        airflow users create \
+            --username "$AIRFLOW_USERNAME" \
+            --firstname "Admin" \
+            --lastname "User" \
+            --role Admin \
+            --email "$AIRFLOW_EMAIL" \
+            --password "$AIRFLOW_PASSWORD"
+
+        echo "Airflow admin user created."
+
+    fi
+
+    # --------------------------------------------------
+    # Start scheduler
+    # --------------------------------------------------
+
+    echo "Starting Airflow scheduler..."
+
+    airflow scheduler &
+    SCHEDULER_PID=$!
+
+    # --------------------------------------------------
+    # Start API server
+    # --------------------------------------------------
+
+    echo "Starting Airflow API server..."
+
+    airflow api-server \
+        --host 0.0.0.0 \
+        --port 8080 &
+
+    API_PID=$!
+
+    # --------------------------------------------------
+    # Status
+    # --------------------------------------------------
+
+    echo "========================================"
+    echo "Airflow started"
+    echo "========================================"
+    echo "API server: 0.0.0.0:8080"
+    echo "Scheduler PID: $SCHEDULER_PID"
+    echo "API PID: $API_PID"
+    echo "========================================"
+
+    # --------------------------------------------------
+    # Keep container alive
+    # --------------------------------------------------
+
+    while kill -0 "$SCHEDULER_PID" 2>/dev/null &&
+          kill -0 "$API_PID" 2>/dev/null
+    do
+        sleep 5
+    done
+
+    echo "Airflow process stopped."
+
+    exit 1
+
+
+# ==================================================
+# STREAMLIT
+# ==================================================
+
 elif [ "$1" = "streamlit" ]; then
-  start_s3_sync  # Perform the S3 sync
 
-  echo "Starting Streamlit app..."
-  exec streamlit run app.py --server.port 8501 --server.address=0.0.0.0 --server.enableCORS false
+    echo "========================================"
+    echo "Starting Streamlit"
+    echo "========================================"
+
+    echo "Python version:"
+    python --version
+
+    # --------------------------------------------------
+    # S3 sync
+    # --------------------------------------------------
+
+    echo "Starting S3 sync..."
+
+    mkdir -p /app/saved_models
+
+    aws s3 sync \
+        "s3://${BUCKET_NAME}/saved_models" \
+        /app/saved_models
+
+    echo "Saved models sync complete."
+
+    # --------------------------------------------------
+    # Start Streamlit
+    # --------------------------------------------------
+
+    echo "Starting Streamlit application..."
+
+    exec streamlit run app.py \
+        --server.port 8501 \
+        --server.address 0.0.0.0 \
+        --server.enableCORS false
+
+
+# ==================================================
+# UNKNOWN COMMAND
+# ==================================================
 
 else
-  echo "Unknown service: $1"
-  exec "$@"
+
+    echo "Unknown service: $1"
+
+    exec "$@"
+
 fi
+

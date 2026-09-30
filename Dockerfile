@@ -28,8 +28,10 @@ RUN python -m pip install --no-cache-dir -r requirements.txt
 
 COPY . /app/
 
-RUN mkdir -p /app/airflow/logs /app/saved_models && \
-    chmod +x /app/start.sh
+COPY . /app/
+
+RUN chmod 755 /app/start.sh && \
+    mkdir -p /app/airflow/logs /app/saved_models
 
 EXPOSE 8080 8501
 

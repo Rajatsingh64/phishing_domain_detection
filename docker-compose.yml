@@ -18,10 +18,7 @@ services:
       retries: 5
 
   airflow:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: phishing-airflow:3.13
+    image: ${IMAGE_NAME}
     container_name: phishing_airflow
     restart: unless-stopped
     depends_on:
@@ -29,6 +26,7 @@ services:
         condition: service_healthy
     ports:
       - "8080:8080"
+    
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW_HOME: /app/airflow
@@ -56,17 +54,11 @@ services:
     command: ["airflow"]
 
   streamlit:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: phishing-app:3.13
+    image: ${IMAGE_NAME}
     container_name: phishing_streamlit
     restart: unless-stopped
     ports:
       - "8501:8501"
-    environment:
-      GOOGLE_CREDENTIALS_B64: ${GOOGLE_CREDENTIALS_B64}
-      Table_ID: ${Table_ID}
     volumes:
       - .:/app
       - ./saved_models:/app/saved_models

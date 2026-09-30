@@ -25,11 +25,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 RUN python -m pip install --upgrade pip setuptools wheel && \
-    python -m pip install --no-cache-dir --prefer-binary -r requirements.txt && \
-    python - <<'PY'
-import psycopg2
-print(f"psycopg2-ok:{psycopg2.__version__}")
-PY
+    python -m pip install --no-cache-dir --prefer-binary -r requirements.txt && 
 
 COPY . /app/
 

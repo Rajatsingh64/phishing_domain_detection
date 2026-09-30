@@ -11,8 +11,7 @@ dill==0.3.9
 
 pymongo==4.10.1
 PyYAML==6.0.2
-
-streamlit==1.39.0
+streamlit>=1.40.0,<2.0.0
 gunicorn==23.0.0
 
 requests==2.32.3

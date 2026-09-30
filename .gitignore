@@ -181,7 +181,3 @@ artifacts/
 logs/
 saved_models/
 model.pkl
-uv.lock
-uv.txt
-.vscode/
-.idea/

@@ -71,7 +71,7 @@ class DataValidationConfig:
                 "report.yml"
             )
             self.missing_columns_threshold = 0.2
-            self.base_data_file_path = os.path.join("base_dataset.csv")
+            self.base_data_file_path = os.path.join("dataset/dataset_full.csv")
         except Exception as e:
             raise PhishingException(e, sys)
 

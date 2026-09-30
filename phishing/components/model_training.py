@@ -34,7 +34,7 @@ class ModelTraining:
         self,
         feature_matrix: pd.DataFrame,
         target_series: pd.Series,
-        top_n: int = 40,
+        top_n: int = 25,
     ):
         """Train the model, rank the features, and retrain on the strongest subset."""
         try:

@@ -34,7 +34,7 @@ class ModelTraining:
         self,
         feature_matrix: pd.DataFrame,
         target_series: pd.Series,
-        top_n: int = 25,
+        top_n: int ,
     ):
         """Train the model, rank the features, and retrain on the strongest subset."""
         try:
@@ -87,7 +87,7 @@ class ModelTraining:
             trained_model, top_feature_names = self.train_rf_model_with_top_features(
                 feature_matrix=train_feature_matrix,
                 target_series=train_target_series,
-                top_n=40,
+                top_n=30,
             )
 
             logging.info(f"Top features selected for training: {top_feature_names}")
@@ -143,7 +143,7 @@ class ModelTraining:
             utils.plot_and_save_feature_importances(
                 model=trained_model,
                 feature_names=train_feature_matrix.columns.tolist(),
-                top_n=40,
+                top_n=30,
                 save_path=self.model_training_config.top_features_plot_file_path,
             )
 

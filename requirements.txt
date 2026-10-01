@@ -1,4 +1,4 @@
-# Compatible for Python 3.12
+# Compatible for Python 3.11
 dill==0.3.5.1
 dnspython==2.7.0
 db-dtypes==1.7.1

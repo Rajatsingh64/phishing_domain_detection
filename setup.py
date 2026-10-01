@@ -24,6 +24,6 @@ setup(
        author="Rajat Singh",
        author_email="rajat.k.singh64@gmail.com" , 
        packages=find_packages() ,
-       version="0.1.0" ,
+       version="0.2.0" ,
        install_requires=get_requirements()
 )

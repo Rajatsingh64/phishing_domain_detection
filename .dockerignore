@@ -12,7 +12,6 @@ notebook/
 demo
 Project Details
 service_credentials.json
-dataset/
 credentials_to_base64.py
 test.ipynb
 test.py

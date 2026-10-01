@@ -77,9 +77,9 @@ with DAG(
     default_args=default_args,
     schedule="@weekly",
     start_date=pendulum.datetime(
-        2025,
-        4,
-        29,
+        2026,
+        10,
+        1,
         tz="UTC",
     ),
     catchup=False,

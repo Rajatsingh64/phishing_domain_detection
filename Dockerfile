@@ -1,39 +1,38 @@
-FROM python:3.13-slim
+# Use Python 3.11 base image
+FROM python:3.11-slim
 
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1 \
-    AIRFLOW_HOME=/app/airflow \
-    AIRFLOW__CORE__ENABLE_XCOM_PICKLING=True \
-    AIRFLOW__CORE__DAGBAG_IMPORT_TIMEOUT=1000 \
-    AIRFLOW__DATABASE__SQL_ALCHEMY_POOL_SIZE=50 \
-    AIRFLOW__DATABASE__SQL_ALCHEMY_MAX_OVERFLOW=50
+# Set environment variables early
+ENV AIRFLOW_HOME="/app/airflow"
+ENV AIRFLOW__CORE__ENABLE_XCOM_PICKLING=True
+ENV AIRFLOW__CORE__DAGBAG_IMPORT_TIMEOUT=1000
+ENV AIRFLOW__DATABASE__SQL_ALCHEMY_POOL_SIZE=50
+ENV AIRFLOW__DATABASE__SQL_ALCHEMY_MAX_OVERFLOW=50
 
+# Set working directory
 WORKDIR /app
 
-COPY requirements.txt ./requirements.txt
-
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        build-essential \
-        gcc \
-        libpq-dev \
-        postgresql-client \
-        curl \
-        awscli && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN python -m pip install --upgrade pip setuptools wheel && \
-    python -m pip install --no-cache-dir --prefer-binary -r requirements.txt 
-
+# Copy everything into /app
 COPY . /app/
 
-RUN sed -i 's/\r$//' /app/start.sh && \
-    chmod +x /app/start.sh && \
-    chmod 755 /app/start.sh && \
-    mkdir -p /app/airflow/logs /app/saved_models
+# Install system dependencies & PostgreSQL driver, AWS CLI, Supervisor
+RUN apt update -y && \
+    apt install -y gcc libpq-dev awscli supervisor && \
+    # Clean up after installing dependencies to reduce image size
+    apt clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    # Upgrade pip and install psycopg2
+    pip3 install --upgrade pip && \
+    # Install Python dependencies
+    pip3 install --no-cache-dir -r requirements.txt
 
+# Create logs directory for Airflow
+RUN mkdir -p /app/airflow/logs
+
+# Make start script executable
+RUN chmod +x start.sh
+
+# Expose ports for Airflow and Streamlit
 EXPOSE 8080 8501
 
+# Set the entrypoint to the startup script
 ENTRYPOINT ["/app/start.sh"]
